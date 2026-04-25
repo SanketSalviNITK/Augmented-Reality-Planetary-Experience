@@ -93,12 +93,11 @@
     </div>
 
     <div id="status-indicator">Initializing Engine...</div>
-    <div id="target-index-display" style="position: fixed; top: 60px; right: 20px; padding: 8px 15px; background: rgba(255, 255, 255, 0.2); color: white; border-radius: 20px; font-size: 0.8rem; z-index: 1000; border: 1px solid rgba(255,255,255,0.3);">Detected Index: None</div>
-
+    
     <a href="index.html" class="exit-btn">Exit AR Mode</a>
 
     <a-scene 
-        mindar-image="imageTargetSrc: assets/targets.mind; autoStart: true; maxTrack: 2" 
+        mindar-image="imageTargetSrc: assets/targets.mind; autoStart: true; maxTrack: 2; filterMinCF: 0.0001; filterBeta: 0.001;" 
         color-space="sRGB" 
         renderer="colorManagement: true, physicallyCorrectLights" 
         vr-mode-ui="enabled: false" 
@@ -119,7 +118,7 @@
         <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: 10000; objects: .clickable"></a-camera>
 
         <!-- Image Targets -->
-        <!-- Note: Target indices correspond to the order you upload them to the MindAR compiler -->
+        <!-- Mapping based on Alphabetical order of markers folder -->
         
         <a-entity mindar-image-target="targetIndex: 6">
             <a-entity gltf-model="#sun-model" scale="0.4 0.4 0.4" rotation="0 0 0" animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear"></a-entity>
@@ -161,6 +160,7 @@
 
     <script>
         const status = document.getElementById('status-indicator');
+        let hideTimeout = null;
         
         window.addEventListener('load', () => {
             status.innerText = 'Scanning...';
@@ -168,24 +168,31 @@
 
         // Track targets
         const targets = document.querySelectorAll('[mindar-image-target]');
-        targets.forEach((target, index) => {
+        targets.forEach((target) => {
             target.addEventListener("targetFound", event => {
-                const targetIdx = target.getAttribute('mindar-image-target').split(':')[1].trim();
-                const indexDisplay = document.getElementById('target-index-display');
-                indexDisplay.innerText = 'Detected Index: ' + targetIdx;
+                if (hideTimeout) {
+                    clearTimeout(hideTimeout);
+                    hideTimeout = null;
+                }
                 
                 status.innerText = 'Planet Detected!';
                 status.style.background = 'rgba(79, 172, 254, 0.3)';
                 status.style.color = '#4facfe';
                 status.style.borderColor = '#4facfe';
+                
+                // Ensure model is visible immediately
+                target.setAttribute('visible', true);
             });
+
             target.addEventListener("targetLost", event => {
-                const indexDisplay = document.getElementById('target-index-display');
-                indexDisplay.innerText = 'Detected Index: None';
-                status.innerText = 'Scanning...';
-                status.style.background = 'rgba(0, 255, 0, 0.1)';
-                status.style.color = '#00ff00';
-                status.style.borderColor = '#00ff00';
+                // Wait 1.5 seconds before hiding to handle shakes/twitches
+                hideTimeout = setTimeout(() => {
+                    target.setAttribute('visible', false);
+                    status.innerText = 'Scanning...';
+                    status.style.background = 'rgba(0, 255, 0, 0.1)';
+                    status.style.color = '#00ff00';
+                    status.style.borderColor = '#00ff00';
+                }, 1500);
             });
         });
     </script>
