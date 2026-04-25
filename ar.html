@@ -53,22 +53,30 @@
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
-            padding: 12px 25px;
+            padding: 12px 30px;
             border-radius: 30px;
             cursor: pointer;
             z-index: 1000;
             text-decoration: none;
-            font-weight: bold;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.8rem;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .exit-btn:hover {
-            background: rgba(255, 0, 0, 0.3);
-            border-color: #ff4b2b;
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
         }
 
         #status-indicator {
@@ -116,7 +124,7 @@
     
     <button id="reset-ar" style="position: fixed; bottom: 30px; right: 20px; padding: 12px 20px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); color: white; border: 1px solid #4facfe; border-radius: 30px; cursor: pointer; z-index: 1000; font-family: 'Outfit', sans-serif;">🔄 Reset Tracking</button>
 
-    <a href="index.html" class="exit-btn">Exit AR Mode</a>
+    <a href="index.html" id="exit-mission" class="exit-btn">Complete Mission</a>
 
     <a-scene 
         mindar-image="imageTargetSrc: assets/targets.mind; autoStart: true; maxTrack: 2; filterMinCF: 0.0001; filterBeta: 0.001;" 
@@ -184,6 +192,7 @@
         import { telemetry } from './src/utils/telemetry.js';
         import { AssessmentModule } from './src/utils/assessment.js';
         import { audioManager } from './src/utils/audio.js';
+        import { scoreManager } from './src/utils/ScoreManager.js';
 
         const assessment = new AssessmentModule(telemetry);
         const planetMap = {
@@ -200,6 +209,38 @@
 
         const status = document.getElementById('status-indicator');
         const resetBtn = document.getElementById('reset-ar');
+        
+        // Score HUD Setup
+        const scoreHud = document.createElement('div');
+        scoreHud.id = 'score-hud';
+        scoreHud.style.cssText = `
+            position: fixed;
+            top: 85px;
+            right: 25px;
+            padding: 10px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            color: #4facfe;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        `;
+        scoreHud.innerHTML = `<span style="font-size: 0.7rem; opacity: 0.6; text-transform: uppercase;">Score</span> <span id="current-score">0</span>`;
+        document.body.appendChild(scoreHud);
+
+        scoreManager.onUpdate((newScore) => {
+            document.getElementById('current-score').innerText = newScore;
+            scoreHud.style.transform = 'scale(1.1)';
+            setTimeout(() => scoreHud.style.transform = 'scale(1)', 200);
+        });
+
         const audioToggle = document.createElement('button');
 
         // Audio Toggle Setup
@@ -234,6 +275,13 @@
             audioToggle.style.boxShadow = isPlaying ? '0 0 20px rgba(79, 172, 254, 0.4)' : 'none';
             audioToggle.style.background = isPlaying ? 'rgba(79, 172, 254, 0.2)' : 'rgba(0, 0, 0, 0.5)';
         };
+        // Exit Logic: Save Score
+        document.getElementById('exit-mission').onclick = (e) => {
+            e.preventDefault();
+            scoreManager.saveToLeaderboard();
+            window.location.href = 'leaderboard.html';
+        };
+
         const lockedTargets = new Set();
         const lockTimers = {};
 
@@ -245,6 +293,10 @@
         const targets = document.querySelectorAll('[mindar-image-target]');
         targets.forEach((target) => {
             target.addEventListener("targetFound", event => {
+                const idx = target.getAttribute('mindar-image-target').split(':')[1].trim();
+                const map = { "6": "sun", "3": "mercury", "8": "venus", "0": "earth", "2": "mars", "1": "jupiter", "5": "saturn", "7": "uranus", "4": "neptune" };
+                const planetKey = map[idx];
+
                 const id = target.id;
                 status.innerText = 'Locking Planet...';
                 status.style.background = 'rgba(255, 165, 0, 0.3)';
@@ -265,13 +317,20 @@
                         dwellTime: 2000 
                     });
 
-                    // Trigger Quiz after a short delay
-                    setTimeout(() => {
-                        assessment.showQuiz(planetMap[id]);
-                    }, 1000);
+                    scoreManager.addPoints(50); // Points for sustained focus
+
+                    // Voiceover logic
+                    if (planetKey) {
+                        audioManager.speak(voiceSummaries[planetKey]);
+                        // Show quiz after voiceover (approx 10s later)
+                        setTimeout(() => {
+                            if (lockedTargets.has(id)) assessment.showQuiz(planetKey);
+                        }, 12000);
+                    }
                 }, 2000);
                 
                 telemetry.logEvent('target_found', { planetId: id });
+                scoreManager.addPoints(10); // Discovery points
             });
 
             target.addEventListener("targetLost", event => {
@@ -304,6 +363,7 @@
                 const id = t.id;
                 if (lockTimers[id]) clearTimeout(lockTimers[id]);
             });
+            window.speechSynthesis.cancel();
             status.innerText = 'Tracker Reset';
             telemetry.logEvent('tracker_reset');
             setTimeout(() => status.innerText = 'Scanning...', 1000);

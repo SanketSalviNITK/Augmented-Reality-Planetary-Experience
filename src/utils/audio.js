@@ -8,7 +8,36 @@ export class AudioManager {
         // Browser requires user interaction to play audio
         this.hasInteracted = false;
         
-        console.log('🎵 Audio Manager Initialized');
+        // Speech Synthesis for Voiceover
+        this.synth = window.speechSynthesis;
+        this.voice = null;
+        
+        // Initialize voices
+        const setVoice = () => {
+            const voices = this.synth.getVoices();
+            // Try to find a high-quality female English voice
+            this.voice = voices.find(v => v.name.includes('Female') || v.name.includes('Google UK English Female') || v.name.includes('Samantha')) || voices[0];
+        };
+        if (this.synth.onvoiceschanged !== undefined) {
+            this.synth.onvoiceschanged = setVoice;
+        }
+        setVoice();
+
+        console.log('🎵 Audio Manager Initialized with Voice Support');
+    }
+
+    speak(text) {
+        // Stop any current speech
+        this.synth.cancel();
+
+        if (!text) return;
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        if (this.voice) utterance.voice = this.voice;
+        utterance.pitch = 1.1; // Slightly higher for a friendly "Teacher" tone
+        utterance.rate = 0.9;  // Slightly slower for children to follow
+        
+        this.synth.speak(utterance);
     }
 
     toggle() {
@@ -25,14 +54,15 @@ export class AudioManager {
             this.isPlaying = true;
             console.log('▶️ Playing background music');
         }).catch(err => {
-            console.warn('🔇 Audio playback blocked by browser. Awaiting interaction.', err);
+            console.warn('🔇 Audio playback blocked by browser.', err);
         });
     }
 
     pause() {
         this.audio.pause();
+        this.synth.cancel();
         this.isPlaying = false;
-        console.log('⏸️ Paused background music');
+        console.log('⏸️ Paused all audio');
     }
 
     setVolume(val) {
