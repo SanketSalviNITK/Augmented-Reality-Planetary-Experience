@@ -5,8 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Explorer | MindAR Mode</title>
+    <script>
+        // HCI Fix: Ensure trailing slash for robust relative pathing
+        if (!window.location.pathname.endsWith('/') && !window.location.pathname.split('/').pop().includes('.')) {
+            window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
+        }
+    </script>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <link rel="stylesheet" href="style.css">
     <style>
         body {
             margin: 0;
@@ -24,14 +31,21 @@
         }
 
         .instruction-card {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(15px);
             color: white;
-            padding: 15px;
-            border-radius: 15px;
-            border: 1px solid rgba(79, 172, 254, 0.3);
-            max-width: 300px;
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(79, 172, 254, 0.2);
+            max-width: 280px;
             pointer-events: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .exit-btn {
@@ -59,16 +73,21 @@
 
         #status-indicator {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 8px 15px;
-            background: rgba(0, 255, 0, 0.1);
-            border: 1px solid #00ff00;
+            top: 25px;
+            right: 25px;
+            padding: 10px 20px;
+            background: rgba(0, 255, 0, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 0, 0.3);
             color: #00ff00;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
             z-index: 1000;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.1);
         }
 
         /* MindAR Overlay styles */
@@ -83,6 +102,7 @@
 </head>
 
 <body>
+    <div class="scanline"></div>
     <div id="ar-ui">
         <div class="instruction-card">
             <h2 style="margin: 0; font-size: 1.2rem; color: #4facfe;">MindAR Active</h2>
@@ -163,6 +183,7 @@
     <script type="module">
         import { telemetry } from './src/utils/telemetry.js';
         import { AssessmentModule } from './src/utils/assessment.js';
+        import { audioManager } from './src/utils/audio.js';
 
         const assessment = new AssessmentModule(telemetry);
         const planetMap = {
@@ -179,6 +200,40 @@
 
         const status = document.getElementById('status-indicator');
         const resetBtn = document.getElementById('reset-ar');
+        const audioToggle = document.createElement('button');
+
+        // Audio Toggle Setup
+        audioToggle.id = 'audio-toggle-ar';
+        audioToggle.innerHTML = '🔈';
+        audioToggle.style.cssText = `
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-radius: 12px;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        `;
+        document.body.appendChild(audioToggle);
+
+        audioToggle.onclick = () => {
+            const isPlaying = audioManager.toggle();
+            audioToggle.innerHTML = isPlaying ? '🔊' : '🔈';
+            audioToggle.style.borderColor = isPlaying ? '#4facfe' : 'rgba(255, 255, 255, 0.2)';
+            audioToggle.style.boxShadow = isPlaying ? '0 0 20px rgba(79, 172, 254, 0.4)' : 'none';
+            audioToggle.style.background = isPlaying ? 'rgba(79, 172, 254, 0.2)' : 'rgba(0, 0, 0, 0.5)';
+        };
         const lockedTargets = new Set();
         const lockTimers = {};
 

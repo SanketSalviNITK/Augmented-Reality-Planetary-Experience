@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Explorer | Final Archive Edition</title>
+    <script>
+        // HCI Fix: Ensure trailing slash for robust relative pathing
+        if (!window.location.pathname.endsWith('/') && !window.location.pathname.split('/').pop().includes('.')) {
+            window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
+        }
+    </script>
     <link rel="stylesheet" href="booklet.css">
 </head>
 <body>
@@ -24,9 +30,9 @@
             <div class="page page-right">
                 <div class="page-header"><h2 style="font-size: 2rem; text-align: center;">Mission Overview</h2></div>
                 <div class="content-columns">
-                    <p>Welcome to the most comprehensive physical-digital interface of our solar system. This archive has been meticulously compiled from the latest astrophysical data to provide both a deep literary understanding and a high-fidelity visual experience of our cosmic neighborhood.</p>
-                    <p>The "Anchor-Gen" system found in these pages is a state-of-the-art geometric tracking method. Each celestial body's marker is unique, generated with a deterministic algorithm that translates the body's physical properties into high-contrast anchor bits. This allows the AR scanner to establish a rock-solid spatial lock, ensuring that the planetary holograms remain stable across any environment.</p>
-                    <p>As you navigate from the blazing heart of the Sun to the frigid, wind-swept blue of Neptune, we invite you to study the detailed archives on the left of each spread. These entries cover composition, atmospheric dynamics, and the history of human exploration. Once you have absorbed the data, use the marker on the right to bring the world into your space.</p>
+                    <p>Welcome, Space Explorer! This booklet is your physical key to the solar system. Inside, you will find special pictures that act like portals, bringing 3D planets right into your room!</p>
+                    <p>Our "Space-Tracking Magic" uses the unique patterns on each page to tell your phone exactly where to place the planetary holograms. Each "Celestial Anchor" is specially designed to keep the planets steady and stable, so you can walk around them and explore every crater and cloud as if they were floating in your own home.</p>
+                    <p>Start with the blazing Sun and journey all the way to the blue winds of Neptune. Read the "Space Logs" on the left to learn cool facts about each world, then point your camera at the "Anchor Picture" on the right to bring that world to life. Your journey to the stars starts right here!</p>
                 </div>
                 <div class="page-number">1</div>
             </div>

@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Explorer | 3D Solar System</title>
+    <script>
+        // HCI Fix: Ensure trailing slash for robust relative pathing
+        if (!window.location.pathname.endsWith('/') && !window.location.pathname.split('/').pop().includes('.')) {
+            window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
+        }
+    </script>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,11 +27,13 @@
 <body>
     <div id="loading-screen" class="loading-screen">
         <div class="loader"></div>
-        <p>Initializing Cosmic Journey...</p>
+        <p style="letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem; margin-top: 20px; color: #4facfe;">Initializing Cosmic Journey...</p>
     </div>
 
+    <div class="scanline"></div>
+
     <div id="ui-layer">
-        <div class="title-card">
+        <div class="title-card glass float-ui">
             <h1>Solar System Explorer</h1>
             <p>A miniature 3D model of our cosmic neighborhood. Click a planet to zoom in!</p>
             <button id="close-btn" style="display: none; margin-top: 10px; padding: 5px 10px; cursor: pointer;">Back to Overview</button>
@@ -55,6 +63,42 @@
     <div id="tooltip"></div>
     <div id="canvas-container"></div>
 
-    <script type="module" src="main.js"></script>
+    <script type="module">
+        import './main.js';
+        import { audioManager } from './src/utils/audio.js';
+
+        const audioToggle = document.createElement('button');
+        audioToggle.id = 'audio-toggle';
+        audioToggle.innerHTML = '🔈';
+        audioToggle.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-radius: 12px;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        `;
+        document.body.appendChild(audioToggle);
+
+        audioToggle.onclick = () => {
+            const isPlaying = audioManager.toggle();
+            audioToggle.innerHTML = isPlaying ? '🔊' : '🔈';
+            audioToggle.style.borderColor = isPlaying ? '#4facfe' : 'rgba(255, 255, 255, 0.2)';
+            audioToggle.style.boxShadow = isPlaying ? '0 0 20px rgba(79, 172, 254, 0.4)' : 'none';
+            audioToggle.style.background = isPlaying ? 'rgba(79, 172, 254, 0.2)' : 'rgba(0, 0, 0, 0.5)';
+        };
+    </script>
 </body>
 </html>

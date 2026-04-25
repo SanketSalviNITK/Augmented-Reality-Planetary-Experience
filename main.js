@@ -17,11 +17,15 @@ const navToggle = document.getElementById('nav-toggle');
 navToggle.addEventListener('click', (e) => {
     e.stopPropagation();
     navMenu.classList.toggle('collapsed');
+    const isCollapsed = navMenu.classList.contains('collapsed');
+    navToggle.innerHTML = isCollapsed ? '☰' : '✕';
+    navToggle.classList.toggle('active', !isCollapsed);
+
     const uiLayer = document.getElementById('ui-layer');
     const isMobile = window.innerWidth <= 768;
     
     if (!isMobile) {
-        uiLayer.style.setProperty('--ui-left', navMenu.classList.contains('collapsed') ? '80px' : '300px');
+        uiLayer.style.setProperty('--ui-left', isCollapsed ? '80px' : '300px');
     }
 });
 
