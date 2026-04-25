@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Explorer | 3D Solar System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap" rel="stylesheet">
+    <!-- Import maps for Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+        <p>Initializing Cosmic Journey...</p>
+    </div>
+
+    <div id="ui-layer">
+        <div class="title-card">
+            <h1>Solar System Explorer</h1>
+            <p>A miniature 3D model of our cosmic neighborhood. Click a planet to zoom in!</p>
+            <button id="close-btn" style="display: none; margin-top: 10px; padding: 5px 10px; cursor: pointer;">Back to Overview</button>
+        </div>
+    </div>
+
+    <div id="nav-menu" class="collapsed">
+        <button id="nav-toggle">☰</button>
+        <div class="nav-content">
+            <h2>Cosmic Navigation</h2>
+            <div id="nav-sun" class="nav-item">Sun</div>
+            <div id="nav-mercury" class="nav-item">Mercury</div>
+            <div id="nav-venus" class="nav-item">Venus</div>
+            <div id="nav-earth" class="nav-item">Earth</div>
+            <div id="nav-mars" class="nav-item">Mars</div>
+            <div id="nav-jupiter" class="nav-item">Jupiter</div>
+            <div id="nav-saturn" class="nav-item">Saturn</div>
+            <div id="nav-uranus" class="nav-item">Uranus</div>
+            <div id="nav-neptune" class="nav-item">Neptune</div>
+            <hr style="border: 0.5px solid rgba(255,255,255,0.1); margin: 10px 0;">
+            <a href="booklet.html" class="nav-item" style="color: var(--accent-blue); text-decoration: none; display: block;">AR Printable Booklet</a>
+        </div>
+    </div>
+
+    <div id="tooltip"></div>
+    <div id="canvas-container"></div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
