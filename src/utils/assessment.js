@@ -150,13 +150,7 @@ export class AssessmentModule {
         document.getElementById('close-quiz').onclick = () => this.container.style.display = 'none';
 
         this.container.querySelectorAll('.quiz-opt').forEach(btn => {
-            btn.onclick = () => {
-                const isCorrect = btn.innerText.trim() === data.a;
-                this.telemetry.logEvent('quiz_answered', { id, isCorrect });
-                btn.style.background = isCorrect ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)';
-                btn.style.borderColor = isCorrect ? '#22c55e' : '#ef4444';
-                setTimeout(() => this.container.style.display = 'none', 1800);
-            };
+            btn.onclick = () => this.handleAnswer(btn, btn.innerText.trim(), data.a, id);
         });
     }
 }

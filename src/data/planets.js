@@ -72,20 +72,26 @@ export const planetData = {
     "uranus": {
         name: "Uranus",
         type: "Ice Giant",
-        temp: "-224 °C (Average)",
+        temp: "-224 °C",
         diameter: "50,724 km",
         distance: "2.9 billion km",
         moons: "27",
+        gravity: "8.69 m/s²",
+        atmosphere: "Hydrogen, Helium, Methane",
+        discovery: "William Herschel (1781)",
         fact: "Uranus rotates on its side, making it look like a rolling ball!",
         description: "Uranus is an ice giant with a blue-green color due to methane gas. It was the first planet discovered with the use of a telescope."
     },
     "neptune": {
         name: "Neptune",
         type: "Ice Giant",
-        temp: "-214 °C (Average)",
+        temp: "-214 °C",
         diameter: "49,244 km",
         distance: "4.5 billion km",
         moons: "14",
+        gravity: "11.15 m/s²",
+        atmosphere: "Hydrogen, Helium, Methane",
+        discovery: "Mathematical Prediction (1846)",
         fact: "Neptune has the strongest winds in the solar system, reaching speeds of 2,100 km/h!",
         description: "Neptune is the most distant planet from the Sun. It is a dark, cold ice giant whipped by supersonic winds."
     }

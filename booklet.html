@@ -3,20 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Explorer | Final Archive Edition</title>
-    <script>
-        // HCI Fix: Ensure trailing slash for robust relative pathing
-        if (!window.location.pathname.endsWith('/') && !window.location.pathname.split('/').pop().includes('.')) {
-            window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
-        }
-    </script>
-    <link rel="stylesheet" href="booklet.css">
+    <link rel="stylesheet" href="./booklet.css">
 </head>
 <body>
     <div class="print-controls">
         <button class="btn-finalize" onclick="window.print()">Export Final Archive (PDF)</button>
-        <a href="ar.html" style="color: #4facfe; margin-left: 20px; text-decoration: none; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold;">✨ ENTER AR MODE</a>
-        <a href="index.html" style="color: white; margin-left: 20px; text-decoration: none; font-family: 'Orbitron'; font-size: 0.7rem; opacity: 0.7; align-self: center;">EXIT TO SYSTEM</a>
+        <a href="./ar.html" style="color: #4facfe; margin-left: 20px; text-decoration: none; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold;">✨ ENTER AR MODE</a>
+        <a href="./index.html" style="color: white; margin-left: 20px; text-decoration: none; font-family: 'Orbitron'; font-size: 0.7rem; opacity: 0.7; align-self: center;">EXIT TO SYSTEM</a>
     </div>
 
     <div class="booklet-container" id="booklet">
