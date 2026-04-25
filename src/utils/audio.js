@@ -40,5 +40,5 @@ export class AudioManager {
     }
 }
 
-// Default ambient space track
-export const audioManager = new AudioManager('https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73484.mp3');
+// Default ambient space track (Voyager 1 Plasma Wave sounds)
+export const audioManager = new AudioManager('https://upload.wikimedia.org/wikipedia/commons/4/4c/Nasa_-_Voyager_1_-_Plasma_Wave_System.mp3');
