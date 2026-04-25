@@ -93,6 +93,7 @@
     </div>
 
     <div id="status-indicator">Initializing Engine...</div>
+    <div id="target-index-display" style="position: fixed; top: 60px; right: 20px; padding: 8px 15px; background: rgba(255, 255, 255, 0.2); color: white; border-radius: 20px; font-size: 0.8rem; z-index: 1000; border: 1px solid rgba(255,255,255,0.3);">Detected Index: None</div>
 
     <a href="index.html" class="exit-btn">Exit AR Mode</a>
 
@@ -169,12 +170,18 @@
         const targets = document.querySelectorAll('[mindar-image-target]');
         targets.forEach((target, index) => {
             target.addEventListener("targetFound", event => {
+                const targetIdx = target.getAttribute('mindar-image-target').split(':')[1].trim();
+                const indexDisplay = document.getElementById('target-index-display');
+                indexDisplay.innerText = 'Detected Index: ' + targetIdx;
+                
                 status.innerText = 'Planet Detected!';
                 status.style.background = 'rgba(79, 172, 254, 0.3)';
                 status.style.color = '#4facfe';
                 status.style.borderColor = '#4facfe';
             });
             target.addEventListener("targetLost", event => {
+                const indexDisplay = document.getElementById('target-index-display');
+                indexDisplay.innerText = 'Detected Index: None';
                 status.innerText = 'Scanning...';
                 status.style.background = 'rgba(0, 255, 0, 0.1)';
                 status.style.color = '#00ff00';
