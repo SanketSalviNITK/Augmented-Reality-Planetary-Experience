@@ -5,6 +5,20 @@ body {
     background: radial-gradient(circle at center, #0a1128 0%, #000000 100%);
     color: white;
     font-family: 'Outfit', sans-serif;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://www.transparenttextures.com/patterns/stardust.png');
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
 }
 
 #canvas-container {
@@ -352,4 +366,47 @@ a.nav-item {
     .nav-content {
         padding-top: 60px;
     }
+}
+/* Premium Utilities */
+.glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glow-blue {
+    box-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
+}
+
+.glow-text {
+    text-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+}
+
+@keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(1000%); }
+}
+
+.scanline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(79, 172, 254, 0.1);
+    z-index: 500;
+    pointer-events: none;
+    animation: scanline 8s linear infinite;
+}
+
+/* Animations */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.float-ui {
+    animation: float 4s ease-in-out infinite;
 }

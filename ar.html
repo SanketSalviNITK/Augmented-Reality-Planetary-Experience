@@ -94,6 +94,8 @@
 
     <div id="status-indicator">Initializing Engine...</div>
     
+    <button id="reset-ar" style="position: fixed; bottom: 30px; right: 20px; padding: 12px 20px; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); color: white; border: 1px solid #4facfe; border-radius: 30px; cursor: pointer; z-index: 1000; font-family: 'Outfit', sans-serif;">🔄 Reset Tracking</button>
+
     <a href="index.html" class="exit-btn">Exit AR Mode</a>
 
     <a-scene 
@@ -118,50 +120,68 @@
         <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: 10000; objects: .clickable"></a-camera>
 
         <!-- Image Targets -->
-        <!-- Mapping based on Alphabetical order of markers folder -->
+        <!-- Each model is wrapped in an anchor entity for world-locking -->
         
-        <a-entity mindar-image-target="targetIndex: 6">
-            <a-entity gltf-model="#sun-model" scale="0.25 0.25 0.25" rotation="0 0 0" animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear"></a-entity>
+        <a-entity mindar-image-target="targetIndex: 6" id="target-6">
+            <a-entity class="planet-model" gltf-model="#sun-model" scale="0.25 0.25 0.25" rotation="0 0 0" animation="property: rotation; to: 0 360 0; loop: true; dur: 20000; easing: linear"></a-entity>
         </a-entity>
 
-        <a-entity mindar-image-target="targetIndex: 3">
-            <a-entity gltf-model="#mercury-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear"></a-entity>
+        <a-entity mindar-image-target="targetIndex: 3" id="target-3">
+            <a-entity class="planet-model" gltf-model="#mercury-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear"></a-entity>
         </a-entity>
 
-        <a-entity mindar-image-target="targetIndex: 8">
-            <a-entity gltf-model="#venus-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear"></a-entity>
+        <a-entity mindar-image-target="targetIndex: 8" id="target-8">
+            <a-entity class="planet-model" gltf-model="#venus-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear"></a-entity>
         </a-entity>
 
-        <a-entity mindar-image-target="targetIndex: 0">
-            <a-entity gltf-model="#earth-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear"></a-entity>
+        <a-entity mindar-image-target="targetIndex: 0" id="target-0">
+            <a-entity class="planet-model" gltf-model="#earth-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 15000; easing: linear"></a-entity>
         </a-entity>
 
-        <a-entity mindar-image-target="targetIndex: 2">
-            <a-entity gltf-model="#mars-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 18000; easing: linear"></a-entity>
+        <a-entity mindar-image-target="targetIndex: 2" id="target-2">
+            <a-entity class="planet-model" gltf-model="#mars-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 18000; easing: linear"></a-entity>
         </a-entity>
 
-        <a-entity mindar-image-target="targetIndex: 1">
-            <a-entity gltf-model="#jupiter-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 25000; easing: linear"></a-entity>
+        <a-entity mindar-image-target="targetIndex: 1" id="target-1">
+            <a-entity class="planet-model" gltf-model="#jupiter-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 25000; easing: linear"></a-entity>
         </a-entity>
 
-        <a-entity mindar-image-target="targetIndex: 5">
-            <a-entity gltf-model="#saturn-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 22000; easing: linear"></a-entity>
+        <a-entity mindar-image-target="targetIndex: 5" id="target-5">
+            <a-entity class="planet-model" gltf-model="#saturn-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 22000; easing: linear"></a-entity>
         </a-entity>
 
-        <a-entity mindar-image-target="targetIndex: 7">
-            <a-entity gltf-model="#uranus-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 28000; easing: linear"></a-entity>
+        <a-entity mindar-image-target="targetIndex: 7" id="target-7">
+            <a-entity class="planet-model" gltf-model="#uranus-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 28000; easing: linear"></a-entity>
         </a-entity>
 
-        <a-entity mindar-image-target="targetIndex: 4">
-            <a-entity gltf-model="#neptune-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 30000; easing: linear"></a-entity>
+        <a-entity mindar-image-target="targetIndex: 4" id="target-4">
+            <a-entity class="planet-model" gltf-model="#neptune-model" scale="0.4 0.4 0.4" animation="property: rotation; to: 0 360 0; loop: true; dur: 30000; easing: linear"></a-entity>
         </a-entity>
 
     </a-scene>
 
-    <script>
+    <script type="module">
+        import { telemetry } from './src/utils/telemetry.js';
+        import { AssessmentModule } from './src/utils/assessment.js';
+
+        const assessment = new AssessmentModule(telemetry);
+        const planetMap = {
+            'target-6': 'sun',
+            'target-3': 'mercury',
+            'target-8': 'venus',
+            'target-0': 'earth',
+            'target-2': 'mars',
+            'target-1': 'jupiter',
+            'target-5': 'saturn',
+            'target-7': 'uranus',
+            'target-4': 'neptune'
+        };
+
         const status = document.getElementById('status-indicator');
-        let hideTimeout = null;
-        
+        const resetBtn = document.getElementById('reset-ar');
+        const lockedTargets = new Set();
+        const lockTimers = {};
+
         window.addEventListener('load', () => {
             status.innerText = 'Scanning...';
         });
@@ -170,30 +190,68 @@
         const targets = document.querySelectorAll('[mindar-image-target]');
         targets.forEach((target) => {
             target.addEventListener("targetFound", event => {
-                if (hideTimeout) {
-                    clearTimeout(hideTimeout);
-                    hideTimeout = null;
-                }
+                const id = target.id;
+                status.innerText = 'Locking Planet...';
+                status.style.background = 'rgba(255, 165, 0, 0.3)';
+                status.style.color = '#ffa500';
+
+                // Clear any pending unlock/hide
+                if (lockTimers[id]) clearTimeout(lockTimers[id]);
+
+                // Start locking timer (2 seconds of stability required)
+                lockTimers[id] = setTimeout(() => {
+                    lockedTargets.add(id);
+                    status.innerText = 'Planet Locked!';
+                    status.style.background = 'rgba(79, 172, 254, 0.3)';
+                    status.style.color = '#4facfe';
+                    
+                    telemetry.logEvent('spatial_lock', { 
+                        planetId: id,
+                        dwellTime: 2000 
+                    });
+
+                    // Trigger Quiz after a short delay
+                    setTimeout(() => {
+                        assessment.showQuiz(planetMap[id]);
+                    }, 1000);
+                }, 2000);
                 
-                status.innerText = 'Planet Detected!';
-                status.style.background = 'rgba(79, 172, 254, 0.3)';
-                status.style.color = '#4facfe';
-                status.style.borderColor = '#4facfe';
-                
-                // Ensure model is visible immediately
-                target.setAttribute('visible', true);
+                telemetry.logEvent('target_found', { planetId: id });
             });
 
             target.addEventListener("targetLost", event => {
-                // Wait 1.5 seconds before hiding to handle shakes/twitches
-                hideTimeout = setTimeout(() => {
+                const id = target.id;
+                if (lockTimers[id]) clearTimeout(lockTimers[id]);
+
+                if (lockedTargets.has(id)) {
+                    // Spatial Locking Active: Don't hide the model
+                    status.innerText = 'Spatial Lock Active';
+                } else {
+                    // Hide if not locked yet
                     target.setAttribute('visible', false);
                     status.innerText = 'Scanning...';
                     status.style.background = 'rgba(0, 255, 0, 0.1)';
                     status.style.color = '#00ff00';
-                    status.style.borderColor = '#00ff00';
-                }, 1500);
+                }
+                
+                telemetry.logEvent('target_lost', { 
+                    planetId: id,
+                    wasLocked: lockedTargets.has(id)
+                });
             });
+        });
+
+        // Reset AR logic
+        resetBtn.addEventListener('click', () => {
+            lockedTargets.clear();
+            targets.forEach(t => {
+                t.setAttribute('visible', false);
+                const id = t.id;
+                if (lockTimers[id]) clearTimeout(lockTimers[id]);
+            });
+            status.innerText = 'Tracker Reset';
+            telemetry.logEvent('tracker_reset');
+            setTimeout(() => status.innerText = 'Scanning...', 1000);
         });
     </script>
 </body>

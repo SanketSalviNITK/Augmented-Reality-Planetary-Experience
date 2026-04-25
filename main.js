@@ -3,6 +3,7 @@ import { SceneManager } from './src/core/SceneManager.js';
 import { SolarSystemView } from './src/views/SolarSystemView.js';
 import { DetailView } from './src/views/DetailView.js';
 import { planetData } from './src/data/planets.js';
+import { telemetry } from './src/utils/telemetry.js';
 
 // Initialize Core
 const sm = new SceneManager('canvas-container');
@@ -37,6 +38,8 @@ async function switchView(viewType, planetKey = null) {
     } else if (viewType === 'detail' && planetKey) {
         currentView = new DetailView(sm, planetKey, planetData[planetKey]);
     }
+
+    telemetry.logEvent('view_switch', { viewType, planetKey });
 
     try {
         await currentView.load();
