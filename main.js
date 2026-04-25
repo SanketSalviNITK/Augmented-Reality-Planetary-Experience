@@ -7,6 +7,7 @@ import { planetData } from './src/data/planets.js';
 // Initialize Core
 const sm = new SceneManager('canvas-container');
 let currentView = null;
+const initialUI = document.getElementById('ui-layer').innerHTML;
 
 // Nav Logic
 const navMenu = document.getElementById('nav-menu');
@@ -16,7 +17,11 @@ navToggle.addEventListener('click', (e) => {
     e.stopPropagation();
     navMenu.classList.toggle('collapsed');
     const uiLayer = document.getElementById('ui-layer');
-    uiLayer.style.left = navMenu.classList.contains('collapsed') ? '80px' : '300px';
+    const isMobile = window.innerWidth <= 768;
+    
+    if (!isMobile) {
+        uiLayer.style.setProperty('--ui-left', navMenu.classList.contains('collapsed') ? '80px' : '300px');
+    }
 });
 
 // View Switching Logic
@@ -28,6 +33,7 @@ async function switchView(viewType, planetKey = null) {
 
     if (viewType === 'overview') {
         currentView = new SolarSystemView(sm);
+        document.getElementById('ui-layer').innerHTML = initialUI;
     } else if (viewType === 'detail' && planetKey) {
         currentView = new DetailView(sm, planetKey, planetData[planetKey]);
     }

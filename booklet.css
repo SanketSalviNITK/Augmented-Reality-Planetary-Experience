@@ -262,3 +262,70 @@ body {
     .print-controls { display: none; }
     .sheet::after { background: rgba(0, 0, 0, 0.1); }
 }
+
+@media screen and (max-width: 1200px) {
+    :root {
+        --sheet-width: 95vw;
+        --sheet-height: auto;
+        --page-width: 100%;
+        --page-height: auto;
+    }
+
+    body {
+        padding: 20px 10px;
+    }
+
+    .sheet {
+        flex-direction: column;
+        height: auto;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .page {
+        width: 100%;
+        height: auto;
+        padding: 30px 20px;
+    }
+
+    .sheet::after {
+        display: none;
+    }
+
+    .content-columns {
+        column-count: 1;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .marker-wrapper {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
+        padding: 20px;
+    }
+
+    .marker-core {
+        width: 100%;
+        height: 100%;
+    }
+
+    .page-cover h1 {
+        font-size: 2.5rem;
+    }
+
+    .print-controls {
+        top: auto;
+        bottom: 20px;
+        right: 20px;
+        left: 20px;
+        justify-content: center;
+    }
+
+    .btn-finalize {
+        width: 100%;
+        padding: 15px;
+    }
+}
