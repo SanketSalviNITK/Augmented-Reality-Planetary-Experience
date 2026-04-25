@@ -311,9 +311,12 @@ a.nav-item {
     }
 
     #nav-toggle {
-        right: 10px;
+        position: fixed;
+        left: 10px;
         top: 10px;
+        right: auto;
         border-radius: 10px;
+        z-index: 1001;
     }
 
     #ui-layer {
