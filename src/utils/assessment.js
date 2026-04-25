@@ -109,6 +109,8 @@ export const quizData = {
     ]
 };
 
+import { scoreManager } from './ScoreManager.js';
+
 export class AssessmentModule {
     constructor(telemetry) {
         this.telemetry = telemetry;
@@ -131,8 +133,13 @@ export class AssessmentModule {
     }
 
     showQuiz(id) {
+        console.log(`[Assessment] Requesting quiz for: ${id}`);
         const pool = quizData[id];
-        if (!pool) return;
+        if (!pool || pool.length === 0) {
+            console.error(`[Assessment] No questions found for planet: ${id}`);
+            return;
+        }
+
         const data = pool[Math.floor(Math.random() * pool.length)];
         this.telemetry.logEvent('quiz_started', { id, q: data.q });
 
@@ -147,10 +154,49 @@ export class AssessmentModule {
         `;
 
         this.container.style.display = 'block';
-        document.getElementById('close-quiz').onclick = () => this.container.style.display = 'none';
+        
+        const closeBtn = document.getElementById('close-quiz');
+        if (closeBtn) closeBtn.onclick = () => this.container.style.display = 'none';
 
         this.container.querySelectorAll('.quiz-opt').forEach(btn => {
-            btn.onclick = () => this.handleAnswer(btn, btn.innerText.trim(), data.a, id);
+            btn.onclick = () => {
+                try {
+                    this.handleAnswer(btn, btn.innerText.trim(), data.a, id);
+                } catch (e) {
+                    console.error('[Assessment] Error in handleAnswer:', e);
+                }
+            };
         });
+    }
+
+    handleAnswer(btn, selected, correct, id) {
+        console.log(`[Assessment] Answered: ${selected} (Correct: ${correct})`);
+        const isCorrect = selected === correct;
+        this.telemetry.logEvent('quiz_answered', { id, selected, isCorrect });
+
+        this.container.querySelectorAll('.quiz-opt').forEach(b => b.style.pointerEvents = 'none');
+
+        btn.style.background = isCorrect ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+        btn.style.borderColor = isCorrect ? '#22c55e' : '#ef4444';
+        btn.style.boxShadow = isCorrect ? '0 0 20px rgba(34, 197, 94, 0.3)' : '0 0 20px rgba(239, 68, 68, 0.3)';
+
+        if (isCorrect) {
+            if (scoreManager) scoreManager.addPoints(100);
+        } else {
+            if (scoreManager) scoreManager.addPoints(-25);
+            const correctBtn = Array.from(this.container.querySelectorAll('.quiz-opt')).find(b => b.innerText.trim() === correct);
+            if (correctBtn) {
+                correctBtn.style.borderColor = '#22c55e';
+                correctBtn.style.color = '#22c55e';
+            }
+        }
+
+        setTimeout(() => {
+            this.container.style.opacity = '0';
+            setTimeout(() => {
+                this.container.style.display = 'none';
+                this.container.style.opacity = '1';
+            }, 500);
+        }, 1800);
     }
 }
