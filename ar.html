@@ -5,15 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Explorer | MindAR Mode</title>
-    <script>
-        // HCI Fix: Ensure trailing slash for robust relative pathing
-        if (!window.location.pathname.endsWith('/') && !window.location.pathname.split('/').pop().includes('.')) {
-            window.location.replace(window.location.pathname + '/' + window.location.search + window.location.hash);
-        }
-    </script>
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
     <style>
         body {
             margin: 0;
@@ -127,22 +121,22 @@
     <a href="index.html" id="exit-mission" class="exit-btn">Complete Mission</a>
 
     <a-scene 
-        mindar-image="imageTargetSrc: assets/targets.mind; autoStart: true; maxTrack: 2; filterMinCF: 0.0001; filterBeta: 0.001;" 
+        mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: true; maxTrack: 2; filterMinCF: 0.0001; filterBeta: 0.001;" 
         color-space="sRGB" 
         renderer="colorManagement: true, physicallyCorrectLights" 
         vr-mode-ui="enabled: false" 
         device-orientation-permission-ui="enabled: false">
         
         <a-assets>
-            <a-asset-item id="sun-model" src="assets/sun.glb"></a-asset-item>
-            <a-asset-item id="mercury-model" src="assets/mercury.glb"></a-asset-item>
-            <a-asset-item id="venus-model" src="assets/venus.glb"></a-asset-item>
-            <a-asset-item id="earth-model" src="assets/earth.glb"></a-asset-item>
-            <a-asset-item id="mars-model" src="assets/mars.glb"></a-asset-item>
-            <a-asset-item id="jupiter-model" src="assets/jupiter.glb"></a-asset-item>
-            <a-asset-item id="saturn-model" src="assets/saturn.glb"></a-asset-item>
-            <a-asset-item id="uranus-model" src="assets/uranus.glb"></a-asset-item>
-            <a-asset-item id="neptune-model" src="assets/neptune.glb"></a-asset-item>
+            <a-asset-item id="sun-model" src="./assets/sun.glb"></a-asset-item>
+            <a-asset-item id="mercury-model" src="./assets/mercury.glb"></a-asset-item>
+            <a-asset-item id="venus-model" src="./assets/venus.glb"></a-asset-item>
+            <a-asset-item id="earth-model" src="./assets/earth.glb"></a-asset-item>
+            <a-asset-item id="mars-model" src="./assets/mars.glb"></a-asset-item>
+            <a-asset-item id="jupiter-model" src="./assets/jupiter.glb"></a-asset-item>
+            <a-asset-item id="saturn-model" src="./assets/saturn.glb"></a-asset-item>
+            <a-asset-item id="uranus-model" src="./assets/uranus.glb"></a-asset-item>
+            <a-asset-item id="neptune-model" src="./assets/neptune.glb"></a-asset-item>
         </a-assets>
 
         <a-camera position="0 0 0" look-controls="enabled: false" cursor="fuse: false; rayOrigin: mouse;" raycaster="far: 10000; objects: .clickable"></a-camera>
@@ -190,11 +184,24 @@
 
     <script type="module">
         import { telemetry } from './src/utils/telemetry.js';
-        import { AssessmentModule } from './src/utils/assessment.js';
+        import { AssessmentModule, quizData } from './src/utils/assessment.js';
         import { audioManager } from './src/utils/audio.js';
         import { scoreManager } from './src/utils/ScoreManager.js';
 
         const assessment = new AssessmentModule(telemetry);
+        
+        const voiceSummaries = {
+            sun: "Welcome to the Sun, the blazing heart of our system! It contains 99.8% of all the mass in our neighborhood and is primarily made of Hydrogen and Helium. It is a G-type star that uses nuclear fusion to create light and heat.",
+            mercury: "Meet Mercury, the smallest planet! It is closest to the Sun and has no atmosphere. A single day there lasts 59 Earth days, and it looks a lot like our Moon.",
+            venus: "This is Venus, the hottest planet of all! It has thick clouds of sulfuric acid and rotates backwards compared to other planets. It is often called Earth's twin.",
+            earth: "Welcome home to Earth! Our blue oasis is 71% water and the only planet known to have life. It is protected by an ozone layer and a strong magnetic field.",
+            mars: "This is the Red Planet, Mars! Its red color comes from iron oxide, which is basically rust. It is home to Olympus Mons, the tallest volcano in the solar system.",
+            jupiter: "Behold Jupiter, the king of planets! It is so big that 1,300 Earths could fit inside it. Look for the Great Red Spot—a storm that has been raging for hundreds of years.",
+            saturn: "Saturn is the crown jewel, famous for its beautiful rings made of ice and rock. Its largest moon, Titan, is the only moon in the system with a thick atmosphere.",
+            uranus: "This is Uranus, the ice giant! It is unique because it rotates on its side. Its beautiful blue-green color comes from methane gas in its atmosphere.",
+            neptune: "Welcome to Neptune, the windiest world! It was discovered using math before anyone ever saw it through a telescope. It has the fastest winds in the solar system."
+        };
+
         const planetMap = {
             'target-6': 'sun',
             'target-3': 'mercury',
@@ -319,13 +326,14 @@
 
                     scoreManager.addPoints(50); // Points for sustained focus
 
-                    // Voiceover logic
+                    // Voiceover logic: Speak first, then show quiz
                     if (planetKey) {
-                        audioManager.speak(voiceSummaries[planetKey]);
-                        // Show quiz after voiceover (approx 10s later)
-                        setTimeout(() => {
-                            if (lockedTargets.has(id)) assessment.showQuiz(planetKey);
-                        }, 12000);
+                        audioManager.speak(voiceSummaries[planetKey], () => {
+                            // Only show quiz if still locked
+                            if (lockedTargets.has(id)) {
+                                assessment.showQuiz(planetKey);
+                            }
+                        });
                     }
                 }, 2000);
                 

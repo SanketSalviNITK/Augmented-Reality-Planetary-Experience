@@ -26,7 +26,7 @@ export class AudioManager {
         console.log('🎵 Audio Manager Initialized with Voice Support');
     }
 
-    speak(text) {
+    speak(text, onEnd = null) {
         // Stop any current speech
         this.synth.cancel();
 
@@ -34,8 +34,12 @@ export class AudioManager {
 
         const utterance = new SpeechSynthesisUtterance(text);
         if (this.voice) utterance.voice = this.voice;
-        utterance.pitch = 1.1; // Slightly higher for a friendly "Teacher" tone
-        utterance.rate = 0.9;  // Slightly slower for children to follow
+        utterance.pitch = 1.1; 
+        utterance.rate = 0.9;  
+        
+        if (onEnd) {
+            utterance.onend = onEnd;
+        }
         
         this.synth.speak(utterance);
     }
