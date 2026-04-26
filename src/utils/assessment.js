@@ -137,28 +137,27 @@ export class AssessmentModule {
     showQuiz(id) {
         console.log(`[Assessment] Requesting quiz for: ${id}`);
         const pool = quizData[id];
-        if (!pool || pool.length === 0) {
-            console.error(`[Assessment] No questions found for planet: ${id}`);
-            return;
-        }
+        if (!pool || pool.length === 0) return;
 
         const data = pool[Math.floor(Math.random() * pool.length)];
         this.telemetry.logEvent('quiz_started', { id, q: data.q });
 
         this.container.innerHTML = `
-            <button id="close-quiz" style="position: absolute; top: 15px; right: 15px; background: none; border: none; color: white; opacity: 0.5; cursor: pointer; font-size: 1.2rem;">✕</button>
-            <div style="margin-bottom: 20px;"><span style="background: rgba(79, 172, 254, 0.2); color: #4facfe; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Mission Knowledge Check</span></div>
-            <h3 style="margin: 0 0 10px; font-size: 1.5rem;">${id.toUpperCase()}</h3>
-            <p style="font-size: 1rem; line-height: 1.4; margin-bottom: 25px;">${data.q}</p>
-            <div id="quiz-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                ${data.o.map(opt => `<button class="quiz-opt" style="padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 10px; cursor: pointer; transition: 0.3s; font-family: 'Outfit'; font-size: 0.9rem;">${opt}</button>`).join('')}
+            <div style="text-align: center; margin-bottom: 20px;">
+                <span style="background: rgba(79, 172, 254, 0.2); color: #4facfe; padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Mission Knowledge Check</span>
             </div>
+            <h3 style="margin: 0 0 10px; font-size: 1.5rem; text-align: center;">${id.toUpperCase()}</h3>
+            <p style="font-size: 1.1rem; line-height: 1.4; margin-bottom: 25px; text-align: center;">${data.q}</p>
+            <div id="quiz-options" style="display: grid; grid-template-columns: 1fr; gap: 12px;">
+                ${data.o.map(opt => `<button class="quiz-opt" style="padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 12px; cursor: pointer; transition: 0.3s; font-family: 'Outfit'; font-size: 1rem; text-align: left;">${opt}</button>`).join('')}
+            </div>
+            <button id="abort-quiz" style="margin-top: 20px; width: 100%; padding: 10px; background: none; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); border-radius: 10px; cursor: pointer; font-size: 0.8rem; text-transform: uppercase;">← Back to Exploration</button>
         `;
 
         this.container.style.display = 'block';
+        this.container.style.opacity = '1';
         
-        const closeBtn = document.getElementById('close-quiz');
-        if (closeBtn) closeBtn.onclick = () => this.container.style.display = 'none';
+        document.getElementById('abort-quiz').onclick = () => this.hide();
 
         this.container.querySelectorAll('.quiz-opt').forEach(btn => {
             btn.onclick = () => {
@@ -178,27 +177,36 @@ export class AssessmentModule {
 
         this.container.querySelectorAll('.quiz-opt').forEach(b => b.style.pointerEvents = 'none');
 
-        btn.style.background = isCorrect ? 'rgba(34, 197, 94, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+        btn.style.background = isCorrect ? 'rgba(34, 197, 94, 0.4)' : 'rgba(239, 68, 68, 0.4)';
         btn.style.borderColor = isCorrect ? '#22c55e' : '#ef4444';
-        btn.style.boxShadow = isCorrect ? '0 0 20px rgba(34, 197, 94, 0.3)' : '0 0 20px rgba(239, 68, 68, 0.3)';
+        
+        const feedback = document.createElement('div');
+        feedback.style.cssText = `
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+            color: ${isCorrect ? '#22c55e' : '#ef4444'};
+            animation: fadeIn 0.3s;
+        `;
+        feedback.innerText = isCorrect ? '✨ MISSION SUCCESS: +100 Points' : `❌ MISSION FAILED: Correct was ${correct}`;
+        this.container.appendChild(feedback);
 
         if (isCorrect) {
             if (scoreManager) scoreManager.addPoints(100);
         } else {
             if (scoreManager) scoreManager.addPoints(-25);
-            const correctBtn = Array.from(this.container.querySelectorAll('.quiz-opt')).find(b => b.innerText.trim() === correct);
-            if (correctBtn) {
-                correctBtn.style.borderColor = '#22c55e';
-                correctBtn.style.color = '#22c55e';
-            }
         }
 
         setTimeout(() => {
-            this.container.style.opacity = '0';
-            setTimeout(() => {
-                this.container.style.display = 'none';
-                this.container.style.opacity = '1';
-            }, 500);
-        }, 1800);
+            this.hide();
+        }, 2500);
+    }
+
+    hide() {
+        this.container.style.opacity = '0';
+        setTimeout(() => {
+            this.container.style.display = 'none';
+            this.container.style.opacity = '1';
+        }, 500);
     }
 }

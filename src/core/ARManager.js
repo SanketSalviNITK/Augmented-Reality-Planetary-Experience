@@ -36,6 +36,9 @@ export class ARManager {
 
         this.updateStatus('Locking Planet...', 'rgba(255, 165, 0, 0.3)', '#ffa500');
 
+        const quizBtn = document.getElementById('mission-quiz-btn');
+        if (quizBtn) quizBtn.style.display = 'none';
+
         if (this.lockTimers[id]) clearTimeout(this.lockTimers[id]);
 
         this.lockTimers[id] = setTimeout(() => {
@@ -50,8 +53,9 @@ export class ARManager {
                 target._activeSpeechId = speechId;
 
                 audioManager.speak(this.voiceSummaries[planetKey], () => {
+                    // Show optional quiz button instead of auto-quiz
                     if (this.lockedTargets.has(id) && target._activeSpeechId === speechId) {
-                        this.assessment.showQuiz(planetKey);
+                        this.showQuizButton(planetKey);
                     }
                 });
             }
@@ -59,6 +63,22 @@ export class ARManager {
         
         this.telemetry.logEvent('target_found', { planetId: id });
         scoreManager.addPoints(10); 
+    }
+
+    showQuizButton(key) {
+        let btn = document.getElementById('mission-quiz-btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'mission-quiz-btn';
+            btn.className = 'quiz-launch-btn';
+            document.body.appendChild(btn);
+        }
+        btn.innerHTML = `<span>🚀 Take ${key.toUpperCase()} Quiz</span>`;
+        btn.style.display = 'flex';
+        btn.onclick = () => {
+            this.assessment.showQuiz(key);
+            btn.style.display = 'none';
+        };
     }
 
     handleLost(target) {

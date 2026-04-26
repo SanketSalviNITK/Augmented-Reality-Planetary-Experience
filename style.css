@@ -522,3 +522,43 @@ a.nav-item {
     transform: translateX(-50%) translateY(-2px);
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
 }
+
+/* Quiz Launch Button */
+.quiz-launch-btn {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border: none;
+    color: white;
+    border-radius: 40px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
+    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s;
+}
+
+.quiz-launch-btn:hover {
+    transform: translateX(-50%) translateY(-5px);
+    box-shadow: 0 15px 40px rgba(79, 172, 254, 0.6);
+}
+
+.quiz-launch-btn:active {
+    transform: translateX(-50%) translateY(0);
+}
+
+@keyframes slideUp {
+    from { bottom: 50px; opacity: 0; }
+    to { bottom: 100px; opacity: 1; }
+}
