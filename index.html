@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Explorer | 3D Solar System</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap" rel="stylesheet">
+    <!-- Import maps for Three.js -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+        <p style="letter-spacing: 2px; text-transform: uppercase; font-size: 0.8rem; margin-top: 20px; color: #4facfe;">Initializing Cosmic Journey...</p>
+    </div>
+
+    <div class="scanline"></div>
+
+    <div id="ui-layer">
+        <div class="title-card glass float-ui">
+            <h1>Solar System Explorer</h1>
+            <p>A miniature 3D model of our cosmic neighborhood. Click a planet to zoom in!</p>
+            <button id="close-btn" style="display: none; margin-top: 10px; padding: 5px 10px; cursor: pointer;">Back to Overview</button>
+        </div>
+    </div>
+
+    <button id="nav-toggle">☰</button>
+    <div id="nav-menu" class="collapsed">
+        <div class="nav-content">
+            <h2>Cosmic Navigation</h2>
+            <div id="nav-sun" class="nav-item">Sun</div>
+            <div id="nav-mercury" class="nav-item">Mercury</div>
+            <div id="nav-venus" class="nav-item">Venus</div>
+            <div id="nav-earth" class="nav-item">Earth</div>
+            <div id="nav-mars" class="nav-item">Mars</div>
+            <div id="nav-jupiter" class="nav-item">Jupiter</div>
+            <div id="nav-saturn" class="nav-item">Saturn</div>
+            <div id="nav-uranus" class="nav-item">Uranus</div>
+            <div id="nav-neptune" class="nav-item">Neptune</div>
+            <hr style="border: 0.5px solid rgba(255,255,255,0.1); margin: 10px 0;">
+            <a href="booklet.html" class="nav-item" style="color: var(--accent-blue); text-decoration: none; display: block;">AR Printable Booklet</a>
+            <a href="ar.html" class="nav-item" style="color: #4facfe; text-decoration: none; display: block; font-weight: 600; border: 1px solid rgba(79, 172, 254, 0.3); background: rgba(79, 172, 254, 0.05); margin-top: 10px;">✨ Enter AR Mode</a>
+            <a href="leaderboard.html" class="nav-item" style="color: #00f2fe; text-decoration: none; display: block; margin-top: 15px;">🏆 Leaderboard</a>
+            <a href="research-admin.html" class="nav-item" style="color: rgba(255,255,255,0.3); text-decoration: none; display: block; font-size: 0.7rem; margin-top: 20px;">Research Admin</a>
+        </div>
+    </div>
+
+    <div id="tooltip"></div>
+    <div id="canvas-container"></div>
+
+    <script type="module">
+        import './main.js';
+        import { audioManager } from './src/utils/audio.js';
+
+        const audioToggle = document.createElement('button');
+        audioToggle.id = 'audio-toggle';
+        audioToggle.innerHTML = '🔈';
+        audioToggle.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.4rem;
+            cursor: pointer;
+            border-radius: 12px;
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        `;
+        document.body.appendChild(audioToggle);
+
+        audioToggle.onclick = () => {
+            const isPlaying = audioManager.toggle();
+            audioToggle.innerHTML = isPlaying ? '🔊' : '🔈';
+            audioToggle.style.borderColor = isPlaying ? '#4facfe' : 'rgba(255, 255, 255, 0.2)';
+            audioToggle.style.boxShadow = isPlaying ? '0 0 20px rgba(79, 172, 254, 0.4)' : 'none';
+            audioToggle.style.background = isPlaying ? 'rgba(79, 172, 254, 0.2)' : 'rgba(0, 0, 0, 0.5)';
+        };
+    </script>
+</body>
+</html>

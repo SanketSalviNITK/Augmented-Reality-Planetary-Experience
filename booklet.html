@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./booklet.css">
+</head>
+<body>
+    <div class="print-controls">
+        <button class="btn-finalize" onclick="window.print()">Export Final Archive (PDF)</button>
+        <a href="./ar.html" style="color: #4facfe; margin-left: 20px; text-decoration: none; font-family: 'Orbitron'; font-size: 0.7rem; font-weight: bold;">✨ ENTER AR MODE</a>
+        <a href="./index.html" style="color: white; margin-left: 20px; text-decoration: none; font-family: 'Orbitron'; font-size: 0.7rem; opacity: 0.7; align-self: center;">EXIT TO SYSTEM</a>
+    </div>
+
+    <div class="booklet-container" id="booklet">
+        <!-- Sheet 1: Cover & Intro -->
+        <div class="sheet">
+            <div class="page page-cover">
+                <div class="author">THE GALACTIC ARCHIVE PRESENTS</div>
+                <h1>COSMIC<br>EXPLORER</h1>
+                <div style="font-family: 'Orbitron'; color: var(--accent-blue); letter-spacing: 5px; font-size: 0.9rem;">ULTIMATE AR PHYSICAL INTERFACE</div>
+            </div>
+            <div class="page page-right">
+                <div class="page-header"><h2 style="font-size: 2rem; text-align: center;">Mission Overview</h2></div>
+                <div class="content-columns">
+                    <p>Welcome, Space Explorer! This booklet is your physical key to the solar system. Inside, you will find special pictures that act like portals, bringing 3D planets right into your room!</p>
+                    <p>Our "Space-Tracking Magic" uses the unique patterns on each page to tell your phone exactly where to place the planetary holograms. Each "Celestial Anchor" is specially designed to keep the planets steady and stable, so you can walk around them and explore every crater and cloud as if they were floating in your own home.</p>
+                    <p>Start with the blazing Sun and journey all the way to the blue winds of Neptune. Read the "Space Logs" on the left to learn cool facts about each world, then point your camera at the "Anchor Picture" on the right to bring that world to life. Your journey to the stars starts right here!</p>
+                </div>
+                <div class="page-number">1</div>
+            </div>
+        </div>
+
+        <!-- Planetary Sheets will be injected here -->
+        
+        <!-- Final Sheet: Closing & Back Cover (added by script) -->
+    </div>
+
+    <script type="module">
+        import { planetData } from './src/data/planets.js';
+
+        const massiveContent = {
+            "sun": "The Sun is the majestic heart of our solar system, a nearly perfect sphere of incandescent plasma that accounts for 99.8% of the total mass of our cosmic neighborhood. Born approximately 4.6 billion years ago from a massive molecular cloud, it is classified as a G-type main-sequence star. At its core, the Sun acts as a titanic nuclear reactor, fusing 600 million tons of hydrogen into helium every single second. This process, known as nuclear fusion, releases vast amounts of energy in the form of photons, which take nearly 170,000 years to reach the surface before traveling just eight minutes across space to illuminate our world.<br><br>The structure of the Sun is complex, consisting of the core, the radiative zone, the convective zone, the photosphere (the visible surface), the chromosphere, and the outermost layer, the corona. The corona, strangely, is millions of degrees hotter than the surface, a mystery that solar physicists are still investigating. The Sun also generates a powerful magnetic field that extends far into space, creating the heliosphere—a giant bubble that protects our system from interstellar radiation. This magnetic activity leads to sunspots, solar flares, and coronal mass ejections, which can affect satellite communications and power grids on Earth. As the Sun continues to age, it will eventually expand into a Red Giant, swallowing the inner planets before ending its life as a compact White Dwarf.",
+            "mercury": "Mercury is a world of extremes, the smallest and innermost planet in the solar system, orbiting the Sun at an average distance of just 58 million kilometers. Its surface is a silent, airless wasteland, heavily cratered and bearing a striking resemblance to Earth's Moon. Because it lacks a significant atmosphere to trap heat, Mercury experiences the most dramatic temperature fluctuations in the solar system, swinging from a scorching 430°C in the sunlight to a frigid -180°C in the shadows of its deepest craters. Despite its proximity to the Sun, radar observations from Earth have suggested the presence of water ice at the poles, shielded from the sun's rays in permanently shadowed craters.<br><br>Mercury is also surprisingly dense, possessing a massive metallic core that accounts for nearly 85% of its radius. This core generates a global magnetic field, though it is only about 1% as strong as Earth's. The planet's surface is marked by long, winding ridges known as lobate scarps, which formed as the planet's interior cooled and contracted, literally causing the surface to wrinkle. Exploration of Mercury has been challenging due to the intense solar gravity and radiation, with only three missions having visited: Mariner 10 in the 1970s, the MESSENGER orbiter which mapped the planet from 2011 to 2015, and the ongoing BepiColombo mission. These missions have revealed that Mercury is far from a dead rock; it possesses a complex exosphere of atoms blasted off the surface by solar wind, and a rich volcanic history that once reshaped its plains.",
+            "venus": "Venus, often dubbed Earth's 'evil twin,' is a planet of suffocating beauty and brutal conditions. Similar in size, mass, and composition to our home world, Venus took a dramatically different evolutionary path. It is shrouded in a thick, opaque atmosphere of carbon dioxide, with high-altitude clouds of pure sulfuric acid. This atmosphere acts like a titanic blanket, trapping solar heat in a runaway greenhouse effect that makes Venus the hottest planet in the solar system, with surface temperatures remaining a constant, lead-melting 465°C regardless of day or night. The atmospheric pressure at the surface is 90 times that of Earth—equivalent to being nearly a kilometer underwater.<br><br>The surface of Venus is a volcanic hellscape, featuring vast plains of basaltic lava, high mountain ranges like Maxwell Montes, and thousands of volcanoes, some of which may still be active today. One of its most peculiar features is its retrograde rotation: Venus rotates so slowly that a day (243 Earth days) is actually longer than its year (225 Earth days), and it spins from east to west. In recent years, Venus has returned to the scientific spotlight due to the controversial detection of phosphine in its upper atmosphere, a gas that on Earth is often associated with microbial life. This has sparked renewed interest in exploring the Venusian clouds, where temperatures and pressures are surprisingly Earth-like. Missions like the Soviet Venera probes are the only ones to have ever seen the surface, surviving for only a few hours before being crushed and melted by the planet's hostile environment.",
+            "earth": "Earth is a pale blue dot, a vibrant oasis of liquid water and life in the cold expanse of the solar system. It is the only world known to harbor living organisms, a result of its unique position in the Sun's 'Goldilocks zone'—where temperatures allow water to exist in all three states: solid, liquid, and gas. Earth's complex systems, including the atmosphere, hydrosphere, lithosphere, and biosphere, are all interconnected in a delicate balance. Our atmosphere, rich in nitrogen and oxygen, provides the air we breathe and protects us from the Sun's harmful ultraviolet radiation and the impact of most meteoroids.<br><br>Geologically, Earth is a dynamic planet. Its outer shell is divided into several rigid tectonic plates that move slowly over millions of years, creating mountain ranges, oceans, and volcanic activity. This plate tectonics, combined with a liquid outer core that generates a protective magnetic field (the magnetosphere), has been crucial in maintaining a stable climate and protecting the atmosphere from being stripped away by solar wind. Earth is also unique for its single, large Moon, which stabilizes the planet's axial tilt and create the tides that have shaped coastal ecosystems. From the frozen depths of Antarctica to the lush rainforests of the Amazon, Earth remains the most complex and fascinating object in the known universe, currently entering a new geological epoch known as the Anthropocene, where human activity is significantly altering the planet's systems.",
+            "mars": "Mars, the Red Planet, has been an object of human fascination for millennia, often viewed as a cold, desert world that once mirrored Earth. Its reddish hue comes from iron oxide, or rust, that permeates its fine-grained soil. Mars is a planet of monumental geography, boasting the tallest volcano in the solar system, Olympus Mons (21.9 km high), and the deepest, longest canyon system, Valles Marineris, which would stretch across the entire United States. Despite its small size, Mars has the same amount of dry land area as Earth. Today, its atmosphere is incredibly thin, composed of 95% carbon dioxide, and it is too cold for liquid water to persist on the surface for long.<br><br>However, evidence from a fleet of orbiters and rovers—including Curiosity and Perseverance—indicates that ancient Mars was much warmer and wetter, with rushing rivers, vast lakes, and perhaps even oceans. These findings have made Mars the primary target in our search for extraterrestrial life, with scientists looking for fossilized microbial signatures in places like Jezero Crater. Mars also has two small, lumpy moons, Phobos and Deimos, which are thought to be captured asteroids. Future exploration plans are incredibly ambitious, with NASA and SpaceX aiming to send the first humans to the Red Planet in the coming decades. These pioneers will have to contend with intense radiation, dust storms that can cover the entire planet, and the challenge of manufacturing oxygen and fuel from the Martian environment. Mars remains the best candidate for humanity's first step toward becoming a multi-planetary species.",
+            "jupiter": "Jupiter is the colossal giant of our solar system, a gas world so massive that more than 1,300 Earths could fit inside it. Composed primarily of hydrogen and helium, it lacks a solid surface; if you tried to stand on Jupiter, you would sink into increasing pressures and temperatures until you were crushed by the weight of the atmosphere. The planet is famous for its colorful bands of clouds, whipped into place by jet streams moving at hundreds of kilometers per hour. Its most iconic feature is the Great Red Spot, a gargantuan storm larger than Earth that has been observed for over 300 years, though it appears to be shrinking in recent decades.<br><br>Deep inside Jupiter, the pressure is so intense that hydrogen is compressed into a metallic state, which conducts electricity and generates the most powerful magnetic field of any planet—20,000 times stronger than Earth's. This magnetosphere creates brilliant auroras at the poles and traps high-energy particles in deadly radiation belts. Jupiter is also a mini-solar system in its own right, with 95 officially recognized moons. The four largest, the Galilean moons, are worlds of their own: volcanic Io, icy Europa (a prime candidate for life in its subsurface ocean), massive Ganymede (larger than Mercury), and cratered Callisto. The Juno spacecraft, currently in orbit, continues to reveal secrets about Jupiter's deep interior and its 'fuzzy' core, challenging our previous models of how gas giants form and evolve.",
+            "saturn": "Saturn is the crown jewel of the solar system, instantly recognizable by its magnificent and complex ring system. While all gas giants have rings, Saturn's are by far the largest and brightest, stretching 282,000 kilometers from the planet but averaging only 10 meters in thickness. These rings are composed of billions of individual particles, from microscopic dust to mountain-sized boulders, almost entirely made of pure water ice. Saturn itself is a massive gas giant, the second-largest planet, but it is so light and airy that it is the only planet in the solar system less dense than water—it would literally float in a giant bathtub.<br><br>Beyond its rings, Saturn is home to a diverse array of moons, numbering 146 in total. The largest, Titan, is a world of incredible mystery, possessing a thick nitrogen-rich atmosphere and a surface featuring lakes and rivers of liquid methane and ethane. Another moon, Enceladus, has become a major focus for astrobiology after the Cassini mission discovered plumes of water vapor and organic molecules erupting from its south pole, originating from a global ocean beneath its icy crust. Saturn also features a bizarre, long-lived hexagonal storm at its north pole, a six-sided jet stream that remains one of the most unique meteorological features in the solar system. The legacy of the Cassini-Huygens mission, which explored the Saturnian system for 13 years, has provided us with a lifetime of data, revealing a system that is dynamic, beautiful, and potentially home to the building blocks of life.",
+            "uranus": "Uranus is the silent giant of the outer solar system, an ice world that was the first planet discovered with the use of a telescope, by William Herschel in 1781. Unlike the gas giants Jupiter and Saturn, Uranus (and its neighbor Neptune) is an 'ice giant,' containing a higher proportion of 'ices' such as water, ammonia, and methane in its composition. This methane gives Uranus its characteristic pale cyan-blue color. Perhaps the most unusual aspect of Uranus is its extreme axial tilt; the planet is tilted nearly 98 degrees, meaning it effectively rolls around the Sun on its side. This leads to extreme seasonal variations where each pole gets 42 years of continuous sunlight followed by 42 years of darkness.<br><br>The interior of Uranus is thought to consist of a small rocky core surrounded by a vast, hot 'ocean' of water, methane, and ammonia, where pressures are high enough to potentially create 'diamond rain.' Its magnetic field is also peculiar, being tilted at a 59-degree angle from its axis of rotation and offset from the planet's center. Uranus has a system of 13 narrow, dark rings and 27 known moons, all named after characters from the works of Shakespeare and Pope. The planet has only been visited once, by Voyager 2 in 1986, which captured the first close-up images of its bland-looking atmosphere and its complex, cratered moons like Miranda. Scientists are currently calling for a dedicated mission to the Uranian system to better understand these 'ice giants,' which appear to be one of the most common types of planets in our galaxy.",
+            "neptune": "Neptune is the most distant major planet in our solar system, a dark, cold, and incredibly windy world located 30 times further from the Sun than Earth. It was the first planet to be discovered through mathematical prediction rather than direct observation, after astronomers noticed irregularities in the orbit of Uranus. Neptune is an ice giant, similar in size and composition to Uranus, but its deeper blue color suggests a slightly different atmospheric chemistry. It is home to the most powerful winds in the solar system, reaching supersonic speeds of over 2,100 km/h, which drive massive storms across the planet's face.<br><br>When Voyager 2 flew past in 1989, it discovered the Great Dark Spot, a storm similar to Jupiter's Great Red Spot, though it had vanished by the time the Hubble Space Telescope looked at the planet a few years later. Neptune also has a faint ring system and 14 known moons. The largest moon, Triton, is particularly fascinating; it orbits Neptune in a 'retrograde' direction (opposite to the planet's rotation), suggesting it was once a dwarf planet from the Kuiper Belt captured by Neptune's gravity. Triton is geologically active, with geysers of nitrogen gas erupting from its frozen surface. Despite being so far from the Sun, Neptune emits more than twice as much energy as it receives, indicating an internal heat source that remains poorly understood. As we look toward the edge of our solar system, Neptune stands as a blue sentinel, marking the boundary between the planetary realm and the icy depths of the Kuiper Belt."
+        };
+
+        const booklet = document.getElementById('booklet');
+        let sheetCount = 2;
+
+        Object.keys(planetData).forEach(key => {
+            const planet = planetData[key];
+            const description = massiveContent[key] || planet.description;
+            const sheet = document.createElement('div');
+            sheet.className = `sheet page-${key}`;
+
+            sheet.innerHTML = `
+                <div class="page page-left">
+                    <div class="page-header">
+                        <h2>${planet.name}</h2>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box"><b>TYPE</b><span>${planet.type}</span></div>
+                        <div class="stat-box"><b>DIST</b><span>${planet.distance}</span></div>
+                        <div class="stat-box"><b>DIAM</b><span>${planet.diameter}</span></div>
+                        <div class="stat-box"><b>MOONS</b><span>${planet.moons}</span></div>
+                    </div>
+                    <div class="content-columns">
+                        ${description}
+                    </div>
+                    <div class="page-number">${(sheetCount * 2) - 2}</div>
+                </div>
+
+                <div class="page page-right">
+                    <div class="summary-box">
+                        <p>${planet.fact}</p>
+                    </div>
+                    
+                    <div class="marker-wrapper" id="marker-${key}">
+                        <div class="marker-core">
+                            <img src="assets/markers/${key}.png" alt="${planet.name}">
+                        </div>
+                    </div>
+                    
+                    <div class="marker-label">ANCHOR-GEN: ${key.toUpperCase()} ARCHIVE</div>
+                    <div class="page-number">${(sheetCount * 2) - 1}</div>
+                </div>
+            `;
+
+            booklet.appendChild(sheet);
+            generateCosmicBorder(key, document.getElementById(`marker-${key}`));
+            sheetCount++;
+        });
+
+        // Add Final Sheet: Closing & Back Cover
+        const finalSheet = document.createElement('div');
+        finalSheet.className = 'sheet';
+        finalSheet.innerHTML = `
+            <div class="page page-left" style="justify-content: center; align-items: center; text-align: center;">
+                <div class="page-header"><h2 style="font-size: 1.5rem;">Exploration Continues</h2></div>
+                <div style="max-width: 80%; font-size: 0.9rem; line-height: 1.6; opacity: 0.8;">
+                    <p>The cosmic journey does not end with these pages. Every day, new data from telescopes and robotic explorers reaches Earth, expanding our understanding of the universe.</p>
+                    <p style="margin-top: 20px;">Keep your eyes on the stars, stay curious, and always keep exploring.</p>
+                    <div style="margin-top: 40px; font-family: 'Orbitron'; color: var(--accent-blue);">SANKET SALVI | NITK</div>
+                </div>
+                <div class="page-number">${(sheetCount * 2) - 2}</div>
+            </div>
+            <div class="page page-back">
+                <div class="author">OFFICIAL GALACTIC ARCHIVE</div>
+                <div class="blurb">
+                    "From the scorched plains of Mercury to the frozen winds of Neptune, the Solar System is a testament to the infinite variety of the cosmos. This guide bridges the physical and digital, bringing the universe into your hands."
+                </div>
+                <div class="logo-credits">
+                    &copy; 2026 AUGMENTED REALITY PLANETARY EXPERIENCE<br>
+                    POWERED BY ANCHOR-GEN TECHNOLOGY
+                </div>
+                <div class="page-number">${(sheetCount * 2) - 1}</div>
+            </div>
+        `;
+        booklet.appendChild(finalSheet);
+
+        function generateCosmicBorder(planetName, container) {
+            const seed = planetName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            const positions = [
+                { top: '0', left: '0' }, { top: '0', right: '0' },
+                { bottom: '0', left: '0' }, { bottom: '0', right: '0' },
+                { top: '0', left: '50%', transform: 'translateX(-50%)' },
+                { bottom: '0', left: '50%', transform: 'translateX(-50%)' },
+                { top: '50%', left: '0', transform: 'translateY(-50%)' },
+                { top: '50%', right: '0', transform: 'translateY(-50%)' }
+            ];
+
+            positions.forEach((pos, index) => {
+                if ((seed + index) % 2 === 0 || (seed * (index + 1)) % 3 === 0) {
+                    const bit = document.createElement('div');
+                    bit.className = 'anchor-bit';
+                    Object.assign(bit.style, pos);
+                    if ((seed + index) % 5 === 0) bit.style.borderRadius = '50%';
+                    else if ((seed + index) % 4 === 0) bit.style.width = '12mm';
+                    container.appendChild(bit);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

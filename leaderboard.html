@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galactic Leaderboard | Cosmic Explorer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: radial-gradient(circle at center, #0a1128 0%, #000000 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .leaderboard-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(79, 172, 254, 0.3);
+            border-radius: 30px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(79, 172, 254, 0.1);
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            letter-spacing: -1px;
+        }
+
+        .entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+
+        .entry:hover {
+            background: rgba(79, 172, 254, 0.1);
+            border-color: rgba(79, 172, 254, 0.3);
+            transform: scale(1.02);
+        }
+
+        .rank {
+            font-weight: 600;
+            color: #4facfe;
+            font-size: 1.2rem;
+            width: 30px;
+        }
+
+        .name {
+            flex-grow: 1;
+            margin-left: 15px;
+            font-size: 1.1rem;
+        }
+
+        .score {
+            font-weight: 600;
+            color: #00f2fe;
+            font-size: 1.3rem;
+        }
+
+        .entry.top-1 { border-color: gold; box-shadow: 0 0 15px rgba(255, 215, 0, 0.2); }
+        .entry.top-1 .rank { color: gold; }
+
+        .btn-group {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #4facfe;
+        }
+
+        .empty-state {
+            text-align: center;
+            opacity: 0.5;
+            padding: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    <div class="leaderboard-card">
+        <h1>Leaderboard</h1>
+        <div id="leaderboard-list">
+            <!-- Entries will be injected here -->
+        </div>
+        <div class="btn-group">
+            <a href="index.html" class="btn">Back to Orbit</a>
+            <a href="ar.html" class="btn" style="background: rgba(79, 172, 254, 0.1); border-color: #4facfe;">New Mission</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { scoreManager } from './src/utils/ScoreManager.js';
+
+        const list = document.getElementById('leaderboard-list');
+        const data = scoreManager.getLeaderboard();
+
+        if (data.length === 0) {
+            list.innerHTML = `<div class="empty-state">No missions completed yet. Be the first to explore!</div>`;
+        } else {
+            list.innerHTML = data.map((entry, index) => `
+                <div class="entry ${index === 0 ? 'top-1' : ''}">
+                    <div class="rank">${index + 1}</div>
+                    <div class="name">${entry.name}</div>
+                    <div class="score">${entry.score.toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
