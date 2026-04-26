@@ -55,23 +55,27 @@ export class SolarSystemView {
     }
 
     getPlanetKey(object) {
-        // Mapping of name fragments to planet keys
+        // Mapping of exact signatures to planet keys
+        // We use the full 'Object_X' to avoid partial matches (e.g., 8 vs 28)
         const fragments = {
-            "Sun": "sun", "Sun": "sun", "56": "sun",
-            "Mercury": "mercury", "5": "mercury",
-            "Venus": "venus", "8": "venus",
-            "Earth": "earth", "11": "earth",
-            "Mars": "mars", "14": "mars",
-            "Jupiter": "jupiter", "17": "jupiter",
-            "Saturn": "saturn", "28": "saturn", "30": "saturn",
-            "Uranus": "uranus", "34": "uranus",
-            "Neptune": "neptune", "42": "neptune"
+            "Sun": "sun", "Object_56": "sun",
+            "Mercury": "mercury", "Object_5": "mercury",
+            "Venus": "venus", "Object_8": "venus",
+            "Earth": "earth", "Object_11": "earth",
+            "Mars": "mars", "Object_14": "mars",
+            "Jupiter": "jupiter", "Object_17": "jupiter",
+            "Saturn": "saturn", "Object_28": "saturn", "Object_30": "saturn",
+            "Uranus": "uranus", "Object_34": "uranus",
+            "Neptune": "neptune", "Object_42": "neptune"
         };
+
+        // Sort fragments by length descending to ensure longest match wins
+        const sortedFrags = Object.entries(fragments).sort((a, b) => b[0].length - a[0].length);
 
         let current = object;
         while (current) {
             const name = current.name;
-            for (const [frag, key] of Object.entries(fragments)) {
+            for (const [frag, key] of sortedFrags) {
                 if (name.includes(frag)) return key;
             }
             current = current.parent;
