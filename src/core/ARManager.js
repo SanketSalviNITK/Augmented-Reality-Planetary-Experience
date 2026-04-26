@@ -38,6 +38,9 @@ export class ARManager {
 
         const quizBtn = document.getElementById('mission-quiz-btn');
         if (quizBtn) quizBtn.style.display = 'none';
+        
+        const explainBtn = document.getElementById('explain-me-btn');
+        if (explainBtn) explainBtn.style.display = 'none';
 
         if (this.lockTimers[id]) clearTimeout(this.lockTimers[id]);
 
@@ -49,15 +52,7 @@ export class ARManager {
             scoreManager.addPoints(50); 
 
             if (planetKey) {
-                const speechId = Date.now();
-                target._activeSpeechId = speechId;
-
-                audioManager.speak(this.voiceSummaries[planetKey], () => {
-                    // Show optional quiz button instead of auto-quiz
-                    if (this.lockedTargets.has(id) && target._activeSpeechId === speechId) {
-                        this.showQuizButton(planetKey);
-                    }
-                });
+                this.showExplainButton(planetKey, id);
             }
         }, 2000);
         
@@ -65,12 +60,37 @@ export class ARManager {
         scoreManager.addPoints(10); 
     }
 
+    showExplainButton(key, targetId) {
+        let btn = document.getElementById('explain-me-btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'explain-me-btn';
+            btn.className = 'ar-action-btn explain-btn';
+            document.body.appendChild(btn);
+        }
+        btn.innerHTML = `<span>🔍 Explain ${key.toUpperCase()}</span>`;
+        btn.style.display = 'flex';
+        
+        const target = document.getElementById(targetId);
+        const speechId = Date.now();
+        target._activeSpeechId = speechId;
+
+        btn.onclick = () => {
+            btn.style.display = 'none';
+            audioManager.speak(this.voiceSummaries[key], () => {
+                if (this.lockedTargets.has(targetId) && target._activeSpeechId === speechId) {
+                    this.showQuizButton(key);
+                }
+            });
+        };
+    }
+
     showQuizButton(key) {
         let btn = document.getElementById('mission-quiz-btn');
         if (!btn) {
             btn = document.createElement('button');
             btn.id = 'mission-quiz-btn';
-            btn.className = 'quiz-launch-btn';
+            btn.className = 'ar-action-btn quiz-btn';
             document.body.appendChild(btn);
         }
         btn.innerHTML = `<span>🚀 Take ${key.toUpperCase()} Quiz</span>`;

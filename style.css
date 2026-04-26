@@ -523,14 +523,13 @@ a.nav-item {
     box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
 }
 
-/* Quiz Launch Button */
-.quiz-launch-btn {
+/* AR Action Buttons (Explain Me & Mission Quiz) */
+.ar-action-btn {
     position: fixed;
     bottom: 100px;
     left: 50%;
     transform: translateX(-50%);
     padding: 15px 40px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     border: none;
     color: white;
     border-radius: 40px;
@@ -540,25 +539,46 @@ a.nav-item {
     text-transform: uppercase;
     letter-spacing: 2px;
     cursor: pointer;
-    z-index: 1000;
+    z-index: 5000;
     display: none;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
-    animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    animation: slideUpAction 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     transition: all 0.3s;
 }
 
-.quiz-launch-btn:hover {
-    transform: translateX(-50%) translateY(-5px);
-    box-shadow: 0 15px 40px rgba(79, 172, 254, 0.6);
+.explain-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    box-shadow: 0 10px 30px rgba(245, 87, 108, 0.4);
 }
 
-.quiz-launch-btn:active {
+.quiz-btn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
+}
+
+.ar-action-btn:hover {
+    transform: translateX(-50%) translateY(-5px);
+    filter: brightness(1.1);
+}
+
+.ar-action-btn:active {
     transform: translateX(-50%) translateY(0);
 }
 
-@keyframes slideUp {
+@keyframes slideUpAction {
     from { bottom: 50px; opacity: 0; }
     to { bottom: 100px; opacity: 1; }
+}
+
+/* Pulsing effect to guide the child */
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+.ar-action-btn {
+    animation: slideUpAction 0.5s, pulseGlow 2s infinite;
 }
