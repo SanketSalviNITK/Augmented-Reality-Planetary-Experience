@@ -86,5 +86,16 @@ export class AudioManager {
     }
 }
 
-// Default ambient space track (Voyager 1 Plasma Wave sounds)
-export const audioManager = new AudioManager('https://upload.wikimedia.org/wikipedia/commons/4/4c/Nasa_-_Voyager_1_-_Plasma_Wave_System.mp3');
+// Default ambient space track (The Mountain Space)
+export const audioManager = new AudioManager('./assets/the_mountain-space-153639.mp3');
+
+// Auto-start logic: Browsers block autoplay, so we wait for first interaction
+const startAudioOnInteraction = () => {
+    audioManager.setVolume(0.2); // Set low volume as requested
+    audioManager.play();
+    document.removeEventListener('click', startAudioOnInteraction);
+    document.removeEventListener('keydown', startAudioOnInteraction);
+};
+
+document.addEventListener('click', startAudioOnInteraction);
+document.addEventListener('keydown', startAudioOnInteraction);
